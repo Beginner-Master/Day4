@@ -1,0 +1,1024 @@
+Q1.1.	WAP to demonstrate the concept of Linear and Binary Search
+
+import java.util.Arrays;
+
+public class SearchDemo {
+
+    // Linear Search method
+    public static int linearSearch(int[] arr, int key) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == key) {
+                return i; // Return the index where the key is found
+            }
+        }
+        return -1; // Return -1 if the key is not found
+    }
+
+    // Binary Search method
+    public static int binarySearch(int[] arr, int key) {
+        int left = 0;
+        int right = arr.length - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2; // Find the middle index
+
+            if (arr[mid] == key) {
+                return mid; // Return the index if the key is found
+            }
+            if (arr[mid] < key) {
+                left = mid + 1; // If the key is greater, ignore the left half
+            } else {
+                right = mid - 1; // If the key is smaller, ignore the right half
+            }
+        }
+        return -1; // Return -1 if the key is not found
+    }
+
+    public static void main(String[] args) {
+        // Array for searching
+        int[] arr = {5, 12, 8, 20, 3, 15, 7};
+
+        // Key to search for
+        int key = 15;
+
+        // Demonstrating Linear Search
+        System.out.println("Linear Search:");
+        int linearResult = linearSearch(arr, key);
+        if (linearResult == -1) {
+            System.out.println("Element " + key + " not found using Linear Search.");
+        } else {
+            System.out.println("Element " + key + " found at index " + linearResult + " using Linear Search.");
+        }
+
+        // Sorting array before Binary Search
+        Arrays.sort(arr); // Binary Search requires the array to be sorted
+        System.out.println("\nArray after sorting: " + Arrays.toString(arr));
+
+        // Demonstrating Binary Search
+        System.out.println("\nBinary Search:");
+        int binaryResult = binarySearch(arr, key);
+        if (binaryResult == -1) {
+            System.out.println("Element " + key + " not found using Binary Search.");
+        } else {
+            System.out.println("Element " + key + " found at index " + binaryResult + " using Binary Search.");
+        }
+    }
+}
+
+
+
+
+Q2.2.	WAP to implement Merge sort
+
+import java.util.Arrays;
+
+public class MergeSortDemo {
+
+    // Method to implement Merge Sort
+    public static void mergeSort(int[] arr) {
+        if (arr.length <= 1) {
+            return; // Base case: an array of length 1 is already sorted
+        }
+
+        // Finding the middle point of the array
+        int mid = arr.length / 2;
+
+        // Divide the array into two halves
+        int[] left = Arrays.copyOfRange(arr, 0, mid);
+        int[] right = Arrays.copyOfRange(arr, mid, arr.length);
+
+        // Recursively sort both halves
+        mergeSort(left);
+        mergeSort(right);
+
+        // Merge the two sorted halves
+        merge(arr, left, right);
+    }
+
+    // Method to merge two sorted arrays
+    public static void merge(int[] arr, int[] left, int[] right) {
+        int i = 0, j = 0, k = 0;
+
+        // Merge the arrays by comparing each element
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                arr[k] = left[i];
+                i++;
+            } else {
+                arr[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        // If there are remaining elements in the left array
+        while (i < left.length) {
+            arr[k] = left[i];
+            i++;
+            k++;
+        }
+
+        // If there are remaining elements in the right array
+        while (j < right.length) {
+            arr[k] = right[j];
+            j++;
+            k++;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Sample array to sort
+        int[] arr = {38, 27, 43, 3, 9, 82, 10};
+
+        System.out.println("Array before sorting: " + Arrays.toString(arr));
+
+        // Perform Merge Sort
+        mergeSort(arr);
+
+        System.out.println("Array after sorting: " + Arrays.toString(arr));
+    }
+}
+
+
+
+Q3.3.	WAP to implement Quick Sort
+
+import java.util.Arrays;
+
+public class QuickSortDemo {
+
+    // Method to implement Quick Sort
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            // Find the pivot element
+            int pivotIndex = partition(arr, low, high);
+
+            // Recursively sort the subarrays
+            quickSort(arr, low, pivotIndex - 1);  // Left subarray
+            quickSort(arr, pivotIndex + 1, high); // Right subarray
+        }
+    }
+
+    // Partition method to place pivot at correct position
+    public static int partition(int[] arr, int low, int high) {
+        // Choose the rightmost element as the pivot
+        int pivot = arr[high];
+
+        // Pointer for the smaller element
+        int i = (low - 1);
+
+        // Traverse through the array and rearrange elements
+        for (int j = low; j < high; j++) {
+            // If current element is smaller than or equal to pivot
+            if (arr[j] <= pivot) {
+                i++; // Increment the smaller element pointer
+                // Swap arr[i] and arr[j]
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        // Swap the pivot element with the element at arr[i+1]
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+        // Return the index of the pivot element
+        return i + 1;
+    }
+
+    public static void main(String[] args) {
+        // Sample array to sort
+        int[] arr = {10, 80, 30, 90, 40, 50, 70};
+
+        System.out.println("Array before sorting: " + Arrays.toString(arr));
+
+        // Perform Quick Sort
+        quickSort(arr, 0, arr.length - 1);
+
+        System.out.println("Array after sorting: " + Arrays.toString(arr));
+    }
+}
+
+
+Q4.1.	WAP to implement Matrix Chain Multiplication problem
+
+public class MatrixChainMultiplication {
+
+    // Method to perform Matrix Chain Multiplication
+    public static int matrixChainOrder(int[] dims) {
+        int n = dims.length;
+
+        // dp[i][j] will store the minimum number of scalar multiplications needed
+        int[][] dp = new int[n - 1][n - 1];
+
+        // Fill the dp table
+        for (int length = 2; length < n; length++) { // length is the chain length
+            for (int i = 0; i < n - length; i++) { // i is the starting point
+                int j = i + length - 1; // j is the ending point
+                dp[i][j] = Integer.MAX_VALUE;
+
+                // Find the minimum cost for multiplying matrices from i to j
+                for (int k = i; k < j; k++) {
+                    int q = dp[i][k] + dp[k + 1][j] + dims[i - 1] * dims[k] * dims[j];
+                    if (q < dp[i][j]) {
+                        dp[i][j] = q;
+                    }
+                }
+            }
+        }
+        return dp[0][n - 2]; // Return the result for multiplying matrices from 1 to n-1
+    }
+
+    public static void main(String[] args) {
+        // Example: Dimensions of matrices A1, A2, A3, ..., An
+        // p[i-1] x p[i] is the dimension of matrix Ai
+        int[] dims = {10, 20, 30, 40, 30};
+
+        System.out.println("Minimum number of scalar multiplications: " + matrixChainOrder(dims));
+    }
+}
+
+
+
+
+
+
+
+
+Q5.2.	WAP to demonstrate the concept of Longest Common Subsequence(LCS)
+
+
+public class LongestCommonSubsequence {
+
+    // Method to find the length of the Longest Common Subsequence
+    public static int lcsLength(String X, String Y) {
+        int m = X.length();
+        int n = Y.length();
+
+        // Create a 2D table to store lengths of longest common subsequence
+        int[][] dp = new int[m + 1][n + 1];
+
+        // Build the dp table
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                // If characters match, take diagonal value + 1
+                if (X.charAt(i - 1) == Y.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    // Else take the max of the left and top cell
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        // The length of the longest common subsequence will be in dp[m][n]
+        return dp[m][n];
+    }
+
+    // Method to reconstruct the LCS from the dp table
+    public static String getLCS(String X, String Y) {
+        int m = X.length();
+        int n = Y.length();
+        StringBuilder lcs = new StringBuilder();
+
+        // Reconstruct the LCS from the dp table
+        while (m > 0 && n > 0) {
+            if (X.charAt(m - 1) == Y.charAt(n - 1)) {
+                lcs.insert(0, X.charAt(m - 1)); // Add character to LCS
+                m--;
+                n--;
+            } else if (dp[m - 1][n] > dp[m][n - 1]) {
+                m--; // Move upwards in the dp table
+            } else {
+                n--; // Move left in the dp table
+            }
+        }
+
+        return lcs.toString();
+    }
+
+    public static void main(String[] args) {
+        // Input strings
+        String X = "ABCBDAB";
+        String Y = "BDCAB";
+
+        // Find the length of LCS
+        int lcsLength = lcsLength(X, Y);
+
+        // Print the length of LCS
+        System.out.println("Length of Longest Common Subsequence: " + lcsLength);
+
+        // Get and print the LCS itself
+        String lcs = getLCS(X, Y);
+        System.out.println("Longest Common Subsequence: " + lcs);
+    }
+}
+
+
+Q6.3.	WAP to demonstrate concept of 0 – 1 Knapsack Problem
+
+
+public class Knapsack {
+
+    // Method to solve the 0-1 Knapsack Problem using Dynamic Programming
+    public static int knapsack(int[] values, int[] weights, int W, int n) {
+        // Create a 2D DP array where dp[i][w] will store the maximum value for capacity w and i items
+        int[][] dp = new int[n + 1][W + 1];
+
+        // Build the dp table
+        for (int i = 1; i <= n; i++) {
+            for (int w = 1; w <= W; w++) {
+                // If the weight of the current item is less than or equal to the capacity w
+                if (weights[i - 1] <= w) {
+                    // Maximize the value by either including or excluding the current item
+                    dp[i][w] = Math.max(dp[i - 1][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]);
+                } else {
+                    // If the item cannot be included, just carry forward the previous value
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        // The value in dp[n][W] will be the maximum value that can be carried
+        return dp[n][W];
+    }
+
+    public static void main(String[] args) {
+        // Values (v[i]) and Weights (w[i]) of items
+        int[] values = {60, 100, 120};
+        int[] weights = {10, 20, 30};
+        
+        // Maximum weight capacity of the knapsack
+        int W = 50;
+        
+        // Number of items
+        int n = values.length;
+
+        // Calculate the maximum value achievable with the given weight capacity
+        int maxValue = knapsack(values, weights, W, n);
+
+        // Print the result
+        System.out.println("Maximum value that can be carried: " + maxValue);
+    }
+}
+
+
+Q7.1.	WAP to demonstrate concept of Minimum Spanning Tree(Prim’s Algorithm
+
+
+import java.util.*;
+
+public class PrimsAlgorithm {
+
+    // Class to represent an edge in the graph
+    static class Edge {
+        int destination, weight;
+        
+        Edge(int destination, int weight) {
+            this.destination = destination;
+            this.weight = weight;
+        }
+    }
+
+    // Method to perform Prim's algorithm
+    public static void primMST(int vertices, int[][] graph) {
+        // To keep track of the minimum weight edge
+        boolean[] inMST = new boolean[vertices];
+        int[] key = new int[vertices]; // Key values to pick minimum weight edge
+        int[] parent = new int[vertices]; // To store the MST
+        
+        // Priority queue to select the minimum weight edge (min-heap)
+        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(e -> e.weight));
+
+        // Initializing all keys to infinity and the first node as the source
+        Arrays.fill(key, Integer.MAX_VALUE);
+        Arrays.fill(parent, -1);
+        key[0] = 0; // Start with the first vertex (0-indexed)
+        pq.add(new Edge(0, 0)); // (vertex, weight)
+
+        // Loop until the priority queue is empty
+        while (!pq.isEmpty()) {
+            // Get the vertex with the minimum key value
+            Edge edge = pq.poll();
+            int u = edge.destination;
+
+            // If the vertex is already included in MST, skip it
+            if (inMST[u]) continue;
+
+            // Include this vertex in MST
+            inMST[u] = true;
+
+            // Iterate over all adjacent vertices of u
+            for (int v = 0; v < vertices; v++) {
+                // If vertex v is not in MST, and there is a shorter edge
+                if (!inMST[v] && graph[u][v] != 0 && graph[u][v] < key[v]) {
+                    key[v] = graph[u][v]; // Update the key value
+                    parent[v] = u; // Set the parent of vertex v
+                    pq.add(new Edge(v, key[v])); // Add it to the priority queue
+                }
+            }
+        }
+
+        // Print the MST (parent array gives the minimum spanning tree)
+        System.out.println("Edge\tWeight");
+        for (int i = 1; i < vertices; i++) {
+            System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Number of vertices
+        int vertices = 5;
+
+        // Adjacency matrix representation of the graph
+        int[][] graph = {
+            {0, 2, 0, 6, 0},
+            {2, 0, 3, 8, 5},
+            {0, 3, 0, 0, 7},
+            {6, 8, 0, 0, 9},
+            {0, 5, 7, 9, 0}
+        };
+
+        // Perform Prim's algorithm
+        primMST(vertices, graph);
+    }
+}
+
+
+
+
+Q8.2.	WAP to demonstrate concept of Fractional Knapsack Problem
+
+
+import java.util.*;
+
+class Item {
+    int value, weight;
+
+    // Constructor to initialize value and weight
+    Item(int value, int weight) {
+        this.value = value;
+        this.weight = weight;
+    }
+}
+
+public class FractionalKnapsack {
+
+    // Function to solve Fractional Knapsack Problem
+    public static double knapSack(int capacity, Item[] items, int n) {
+        // Sort items based on value/weight ratio in descending order
+        Arrays.sort(items, (a, b) -> (b.value * a.weight) - (a.value * b.weight));
+
+        double totalValue = 0.0; // To store the maximum value that can be carried
+
+        // Traverse through all the items
+        for (int i = 0; i < n; i++) {
+            if (capacity == 0) break;
+
+            // If the item can be completely taken, take it
+            if (items[i].weight <= capacity) {
+                totalValue += items[i].value;
+                capacity -= items[i].weight;
+            }
+            // If the item cannot be fully taken, take the fraction of it
+            else {
+                totalValue += items[i].value * ((double) capacity / items[i].weight);
+                break;
+            }
+        }
+
+        return totalValue;
+    }
+
+    public static void main(String[] args) {
+        // Number of items
+        int n = 3;
+        
+        // Array of items with value and weight
+        Item[] items = {
+            new Item(60, 10), // Value 60, Weight 10
+            new Item(100, 20), // Value 100, Weight 20
+            new Item(120, 30)  // Value 120, Weight 30
+        };
+        
+        // Capacity of the knapsack
+        int capacity = 50;
+
+        // Calculate the maximum value that can be carried
+        double maxValue = knapSack(capacity, items, n);
+
+        // Print the maximum value that can be obtained
+        System.out.println("Maximum value that can be carried: " + maxValue);
+    }
+}
+
+
+
+Q9.3.	WAP to implement single source shortest problem using Dijkstra’s Algorithm
+
+
+import java.util.*;
+
+class Dijkstra {
+
+    // Method to implement Dijkstra's Algorithm
+    public static void dijkstra(int V, int[][] graph, int source) {
+        // Distance array to store the shortest distance from the source to each vertex
+        int[] dist = new int[V];
+        
+        // Set all distances to infinity initially
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        // Distance to source node is 0
+        dist[source] = 0;
+
+        // Priority queue to store (vertex, distance), ordered by the shortest distance
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        
+        // Add the source node to the priority queue
+        pq.add(new int[]{source, 0});
+        
+        while (!pq.isEmpty()) {
+            // Extract the vertex with the smallest distance
+            int[] curr = pq.poll();
+            int u = curr[0];
+            int d = curr[1];
+
+            // If the current distance is already greater than the stored distance, skip it
+            if (d > dist[u]) continue;
+
+            // Relax the edges connected to vertex u
+            for (int v = 0; v < V; v++) {
+                // If there is an edge from u to v, and if the path through u is shorter than the current known path
+                if (graph[u][v] != 0 && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                    pq.add(new int[]{v, dist[v]});
+                }
+            }
+        }
+
+        // Print the shortest distance from the source to each vertex
+        System.out.println("Vertex\tDistance from Source");
+        for (int i = 0; i < V; i++) {
+            System.out.println(i + "\t" + dist[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Number of vertices in the graph
+        int V = 5;
+
+        // Adjacency matrix representation of the graph (0 means no edge)
+        int[][] graph = {
+            {0, 10, 0, 30, 0},
+            {10, 0, 50, 0, 0},
+            {0, 50, 0, 20, 10},
+            {30, 0, 20, 0, 60},
+            {0, 0, 10, 60, 0}
+        };
+
+        // Source vertex
+        int source = 0;
+
+        // Run Dijkstra's algorithm to find shortest paths from the source
+        dijkstra(V, graph, source);
+    }
+}
+
+
+Q10. WAP to demonstrate concept of Red Black Tree insertion and Deletion
+
+
+
+class RedBlackTree {
+
+    // Node of the Red-Black Tree
+    static class Node {
+        int data;
+        Node left, right, parent;
+        int color; // 0 for Black, 1 for Red
+
+        Node(int data) {
+            this.data = data;
+            this.color = 1; // New nodes are always red
+            this.left = this.right = this.parent = null;
+        }
+    }
+
+    private Node root;
+    private Node TNULL; // Sentinel node representing leaves
+
+    // Constructor to initialize the Red-Black Tree
+    public RedBlackTree() {
+        TNULL = new Node(0); // Leaf node is black
+        TNULL.color = 0; // Black color for the leaf
+        root = TNULL;
+    }
+
+    // Right rotation
+    private void rightRotate(Node x) {
+        Node y = x.left;
+        x.left = y.right;
+        if (y.right != TNULL) {
+            y.right.parent = x;
+        }
+        y.parent = x.parent;
+        if (x.parent == TNULL) {
+            root = y;
+        } else if (x == x.parent.right) {
+            x.parent.right = y;
+        } else {
+            x.parent.left = y;
+        }
+        y.right = x;
+        x.parent = y;
+    }
+
+    // Left rotation
+    private void leftRotate(Node x) {
+        Node y = x.right;
+        x.right = y.left;
+        if (y.left != TNULL) {
+            y.left.parent = x;
+        }
+        y.parent = x.parent;
+        if (x.parent == TNULL) {
+            root = y;
+        } else if (x == x.parent.left) {
+            x.parent.left = y;
+        } else {
+            x.parent.right = y;
+        }
+        y.left = x;
+        x.parent = y;
+    }
+
+    // Fix the red-black tree properties after insertion
+    private void fixInsert(Node k) {
+        Node u;
+        while (k.parent.color == 1) {
+            if (k.parent == k.parent.parent.right) {
+                u = k.parent.parent.left;
+                if (u.color == 1) {
+                    u.color = 0;
+                    k.parent.color = 0;
+                    k.parent.parent.color = 1;
+                    k = k.parent.parent;
+                } else {
+                    if (k == k.parent.left) {
+                        k = k.parent;
+                        rightRotate(k);
+                    }
+                    k.parent.color = 0;
+                    k.parent.parent.color = 1;
+                    leftRotate(k.parent.parent);
+                }
+            } else {
+                u = k.parent.parent.right;
+                if (u.color == 1) {
+                    u.color = 0;
+                    k.parent.color = 0;
+                    k.parent.parent.color = 1;
+                    k = k.parent.parent;
+                } else {
+                    if (k == k.parent.right) {
+                        k = k.parent;
+                        leftRotate(k);
+                    }
+                    k.parent.color = 0;
+                    k.parent.parent.color = 1;
+                    rightRotate(k.parent.parent);
+                }
+            }
+            if (k == root) {
+                break;
+            }
+        }
+        root.color = 0;
+    }
+
+    // Insert a node into the Red-Black Tree
+    public void insert(int key) {
+        Node node = new Node(key);
+        Node y = TNULL;
+        Node x = root;
+
+        while (x != TNULL) {
+            y = x;
+            if (node.data < x.data) {
+                x = x.left;
+            } else {
+                x = x.right;
+            }
+        }
+        node.parent = y;
+        if (y == TNULL) {
+            root = node;
+        } else if (node.data < y.data) {
+            y.left = node;
+        } else {
+            y.right = node;
+        }
+        if (node.parent == TNULL) {
+            node.color = 0;
+            return;
+        }
+        if (node.parent.parent == TNULL) {
+            return;
+        }
+        fixInsert(node);
+    }
+
+    // Fix the Red-Black Tree after deletion
+    private void fixDelete(Node x) {
+        Node s;
+        while (x != root && x.color == 0) {
+            if (x == x.parent.left) {
+                s = x.parent.right;
+                if (s.color == 1) {
+                    s.color = 0;
+                    x.parent.color = 1;
+                    leftRotate(x.parent);
+                    s = x.parent.right;
+                }
+                if (s.left.color == 0 && s.right.color == 0) {
+                    s.color = 1;
+                    x = x.parent;
+                } else {
+                    if (s.right.color == 0) {
+                        s.left.color = 0;
+                        s.color = 1;
+                        rightRotate(s);
+                        s = x.parent.right;
+                    }
+                    s.color = x.parent.color;
+                    x.parent.color = 0;
+                    s.right.color = 0;
+                    leftRotate(x.parent);
+                    x = root;
+                }
+            } else {
+                s = x.parent.left;
+                if (s.color == 1) {
+                    s.color = 0;
+                    x.parent.color = 1;
+                    rightRotate(x.parent);
+                    s = x.parent.left;
+                }
+                if (s.right.color == 0 && s.right.color == 0) {
+                    s.color = 1;
+                    x = x.parent;
+                } else {
+                    if (s.left.color == 0) {
+                        s.right.color = 0;
+                        s.color = 1;
+                        leftRotate(s);
+                        s = x.parent.left;
+                    }
+                    s.color = x.parent.color;
+                    x.parent.color = 0;
+                    s.left.color = 0;
+                    rightRotate(x.parent);
+                    x = root;
+                }
+            }
+        }
+        x.color = 0;
+    }
+
+    // Delete a node from the Red-Black Tree
+    public void deleteNode(int key) {
+        Node z = TNULL;
+        Node x, y;
+        while (root != TNULL) {
+            if (root.data == key) {
+                z = root;
+            }
+            if (root.data <= key) {
+                root = root.right;
+            } else {
+                root = root.left;
+            }
+        }
+        if (z == TNULL) {
+            System.out.println("Couldn't find key in the tree");
+            return;
+        }
+        y = z;
+        int yOriginalColor = y.color;
+        if (z.left == TNULL) {
+            x = z.right;
+            transplant(z, z.right);
+        } else if (z.right == TNULL) {
+            x = z.left;
+            transplant(z, z.left);
+        } else {
+            y = minimum(z.right);
+            yOriginalColor = y.color;
+            x = y.right;
+            if (y.parent == z) {
+                x.parent = y;
+            } else {
+                transplant(y, y.right);
+                y.right = z.right;
+                y.right.parent = y;
+            }
+            transplant(z, y);
+            y.left = z.left;
+            y.left.parent = y;
+            y.color = z.color;
+        }
+        if (yOriginalColor == 0) {
+            fixDelete(x);
+        }
+    }
+
+    private void transplant(Node u, Node v) {
+        if (u.parent == TNULL) {
+            root = v;
+        } else if (u == u.parent.left) {
+            u.parent.left = v;
+        } else {
+            u.parent.right = v;
+        }
+        v.parent = u.parent;
+    }
+
+    private Node minimum(Node node) {
+        while (node.left != TNULL) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    // Utility method to print the tree
+    public void printTree() {
+        printTreeHelper(this.root, "", true);
+    }
+
+    private void printTreeHelper(Node root, String indent, boolean last) {
+        if (root != TNULL) {
+            System.out.print(indent);
+            if (last) {
+                System.out.print("R----");
+                indent += "   ";
+            } else {
+                System.out.print("L----");
+                indent += "|  ";
+            }
+
+            String sColor = root.color == 1 ? "RED" : "BLACK";
+            System.out.println(root.data + "(" + sColor + ")");
+            printTreeHelper(root.left, indent, false);
+            printTreeHelper(root.right, indent, true);
+        }
+    }
+
+    public static void main(String[] args) {
+        RedBlackTree tree = new RedBlackTree();
+        
+        tree.insert(55);
+        tree.insert(40);
+        tree.insert(65);
+        tree.insert(60);
+        tree.insert(70);
+        tree.insert(50);
+        
+        System.out.println("Red-Black Tree after Insertion:");
+        tree.printTree();
+        
+        tree.deleteNode(40);
+        
+        System.out.println("\nRed-Black Tree after Deletion:");
+        tree.printTree();
+    }
+}
+
+
+
+
+Q11.1.	WAP to demonstrate the concept of Naïve String matching algorithm.
+
+
+
+
+public class NaiveStringMatching {
+
+    // Naive string matching algorithm
+    public static void naiveStringMatching(String text, String pattern) {
+        int n = text.length(); // Length of the text
+        int m = pattern.length(); // Length of the pattern
+        
+        // Traverse through the text
+        for (int i = 0; i <= n - m; i++) {
+            int j = 0;
+            
+            // Compare the pattern with the current substring of the text
+            while (j < m && text.charAt(i + j) == pattern.charAt(j)) {
+                j++;
+            }
+            
+            // If the whole pattern is found
+            if (j == m) {
+                System.out.println("Pattern found at index " + i);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example usage
+        String text = "AABAACAADAABAABA";
+        String pattern = "AABA";
+
+        System.out.println("Text: " + text);
+        System.out.println("Pattern: " + pattern);
+        
+        // Call the naive string matching function
+        naiveStringMatching(text, pattern);
+    }
+}
+
+
+Q12.2.	WAP to demonstrate the concept of Robin Karp Algorithm.
+
+
+
+public class RabinKarp {
+
+    // Function to calculate the hash value of a string using a base and a prime modulus
+    private static long calculateHash(String str, int base, int mod) {
+        long hashValue = 0;
+        for (int i = 0; i < str.length(); i++) {
+            hashValue = (hashValue * base + str.charAt(i)) % mod;
+        }
+        return hashValue;
+    }
+
+    // Function to search for all occurrences of the pattern in the text using Rabin-Karp
+    public static void rabinKarpSearch(String text, String pattern) {
+        int n = text.length();
+        int m = pattern.length();
+        int base = 256;  // Base value (considering extended ASCII)
+        int mod = 101;   // A prime number used for modulo operation to reduce hash collisions
+
+        long patternHash = calculateHash(pattern, base, mod);
+        long textHash = calculateHash(text.substring(0, m), base, mod);
+
+        // Precompute the base^(m-1) % mod to use for rolling hash calculation
+        long basePower = 1;
+        for (int i = 0; i < m - 1; i++) {
+            basePower = (basePower * base) % mod;
+        }
+
+        // Slide over the text
+        for (int i = 0; i <= n - m; i++) {
+            if (patternHash == textHash) {
+                // Hash matches, check if characters match
+                if (text.substring(i, i + m).equals(pattern)) {
+                    System.out.println("Pattern found at index: " + i);
+                }
+            }
+
+            // If there are more characters left in the text, update the hash for the next substring
+            if (i < n - m) {
+                textHash = (textHash - text.charAt(i) * basePower) % mod;
+                textHash = (textHash * base + text.charAt(i + m)) % mod;
+
+                // If the hash is negative, make it positive
+                if (textHash < 0) {
+                    textHash += mod;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        String text = "ABABDABACDABABCABAB";
+        String pattern = "ABABCABAB";
+
+        System.out.println("Text: " + text);
+        System.out.println("Pattern: " + pattern);
+
+        // Call the Rabin-Karp search function
+        rabinKarpSearch(text, pattern);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
